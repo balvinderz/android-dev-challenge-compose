@@ -37,6 +37,12 @@ public val myStyle   = TextStyle(
     fontWeight = FontWeight.SemiBold,
     color = Color.White
 )
+public val myStyleBlackColor   = TextStyle(
+    fontFamily = Montserrat,
+    fontSize = 19.sp,
+    fontWeight = FontWeight.SemiBold,
+    color = blackish
+)
 val typography = Typography(
     body1 = TextStyle(
         fontFamily = Montserrat,

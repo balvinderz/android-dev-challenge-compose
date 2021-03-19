@@ -19,15 +19,23 @@ import android.os.Bundle
 import android.widget.Space
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowCircleUp
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -40,12 +48,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import com.example.androiddevchallenge.ui.theme.Montserrat
-import com.example.androiddevchallenge.ui.theme.MyTheme
-import com.example.androiddevchallenge.ui.theme.blackish
-import com.example.androiddevchallenge.ui.theme.myStyle
+import com.example.androiddevchallenge.composables.BottomSheet
+import com.example.androiddevchallenge.composables.BottomSheetCenter
+import com.example.androiddevchallenge.ui.theme.*
 
 class MainActivity : AppCompatActivity() {
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window,false)
@@ -58,15 +66,19 @@ class MainActivity : AppCompatActivity() {
 }
 
 // Start building your app here!
+@ExperimentalAnimationApi
 @Composable
 fun MyApp() {
-    val gradient1 = listOf<Color>(Color(0xFF8C2480),Color(0xFFCE587D),Color(0xFFFF9485),Color(0xFFFF9D80),Color(0xFFFFBD73),Color(0xFFFFC96F))
+    val gradient1 = listOf<Color>(Color(0xFF8C2480),Color(0xFFCE587D),Color(0xFFFF9485),Color(0xFFFF9D80),Color(0xFFFFBD73),Color(0xFFFFFF))
     val gradient2 =listOf(
         Color(0xFF262F69),
         Color(0xFF3B4791),
         Color(0xFF829BBF),
         Color(0xFFFFB98D)
     )
+    val expanded = remember {
+        mutableStateOf(true    )
+    }
     Surface(color = MaterialTheme.colors.background) {
         Box(modifier = Modifier
             .fillMaxSize()
@@ -77,8 +89,18 @@ fun MyApp() {
 
                 )
             )) {
-
-
+            Row(                modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 50.dp, end = 20.dp),horizontalArrangement = Arrangement.End) {
+                Text("C°",style = myStyle.copy(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                ))
+            Text("/F°",style = myStyle.copy(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            ),modifier = Modifier.alpha(0.5f))
+            }
 
             Column() {
                 Column(
@@ -125,7 +147,7 @@ fun MyApp() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Image(
-                                    painter = painterResource(id = R.drawable.weather_icons_05),
+                                    painter = painterResource(id = R.drawable.sunny_with_cloud),
                                     contentDescription = null
                                 )
                                 Spacer(modifier = Modifier.width(10.3.dp))
@@ -164,7 +186,7 @@ fun MyApp() {
 
             }
             Image(
-                painter = painterResource(id = R.drawable.landscape_5),
+                painter = painterResource(id = R.drawable.landscape_2),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -172,100 +194,30 @@ fun MyApp() {
                 contentScale = ContentScale.FillWidth
             )
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
-                Box(Modifier.fillMaxWidth().padding(top = 20.dp)){
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(end = 36.dp),
-                    horizontalArrangement = Arrangement.End){
-                    FloatingActionButton(
-                        onClick = { /*TODO*/ },backgroundColor =  Color(0xFFA8A3C5),modifier = Modifier
-                            .height(34.dp)
-                            .width(34.dp)) {
-                        Image(painter = painterResource(id = R.drawable.up_icon),contentDescription = null)
-                    }
-                }}
                 Box(
-                    modifier = Modifier
+                    Modifier
                         .fillMaxWidth()
-                        .height(250.dp)
-                        .clip(
-                            RoundedCornerShape(
-                                topEnd = 40.dp,
-                                topStart = 40.dp
-                            )
-                        )
-                        .background(color = Color.White)
-                ) {
-
+                        .padding(top = 20.dp)){
+                    BottomSheet(expanded = expanded.value)
                     Row(modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 76.dp, start = 45.dp, end = 45.dp),horizontalArrangement = Arrangement.SpaceAround){
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = painterResource(id = R.drawable.sunrise_icon),
-                            contentDescription = null
-                        )
-                        Text(
-                            "Sunrise", style = myStyle.copy(
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = blackish
-                            )
-                        )
-                        Text(
-                            "05:04", style = myStyle.copy(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = blackish
-                            )
-                        )
+                        .padding(end = 36.dp, top = 20.dp),horizontalArrangement = Arrangement.End){
+                        FloatingActionButton(onClick = { expanded.value = !expanded.value   },backgroundColor =  yellowish,modifier = Modifier.size(36.dp)) {
+                            Icon(if(expanded.value) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,tint = Color.Black ,contentDescription = null)
+                        }
                     }
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Image(
-                                painter = painterResource(id = R.drawable.sunrise_icon),
-                                contentDescription = null
-                            )
-                            Text(
-                                "Sunrise", style = myStyle.copy(
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = blackish
-                                )
-                            )
-                            Text(
-                                "05:04", style = myStyle.copy(
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = blackish
-                                )
-                            )
-                        }
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Image(
-                                painter = painterResource(id = R.drawable.sunrise_icon),
-                                contentDescription = null
-                            )
-                            Text(
-                                "Sunrise", style = myStyle.copy(
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = blackish
-                                )
-                            )
-                            Text(
-                                "05:04", style = myStyle.copy(
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = blackish
-                                )
-                            )
-                        }
+                    androidx.compose.animation.AnimatedVisibility(visible =!expanded.value ) {
+                        BottomSheetCenter()
 
                     }
-            }
-        }}}
+                }
+                
+
+            }}}
 
 }
 
+@ExperimentalAnimationApi
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun LightPreview() {
@@ -274,6 +226,7 @@ fun LightPreview() {
     }
 }
 
+@ExperimentalAnimationApi
 @Preview("Dark Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun DarkPreview() {
