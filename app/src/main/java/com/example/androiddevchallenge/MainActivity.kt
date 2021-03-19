@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 // Start building your app here!
 @Composable
 fun MyApp() {
-    val gradient1 = listOf<Color>(Color(0xFFFF9D80),Color(0xFFCE587D),Color(0xFFFF9485),Color(0xFFFF9D80),Color(0xFFFFBD73),Color(0xFFFFC96F))
+    val gradient1 = listOf<Color>(Color(0xFF8C2480),Color(0xFFCE587D),Color(0xFFFF9485),Color(0xFFFF9D80),Color(0xFFFFBD73),Color(0xFFFFC96F))
     val gradient2 =listOf(
         Color(0xFF262F69),
         Color(0xFF3B4791),
@@ -71,7 +71,7 @@ fun MyApp() {
         Box(modifier = Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.linearGradient(
+                brush = Brush.verticalGradient(
 
                     colors = gradient1
 
