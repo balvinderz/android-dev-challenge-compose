@@ -35,7 +35,7 @@ fun BottomSheet(expanded  : Boolean ){
 
         var height = 250
     if (expanded )
-        height = 750
+        height = 760
         Box(
             modifier = Modifier
                 .fillMaxWidth()

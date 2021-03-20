@@ -15,9 +15,12 @@
  */
 package com.example.androiddevchallenge
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Space
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -47,16 +50,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.example.androiddevchallenge.composables.BottomSheet
 import com.example.androiddevchallenge.composables.BottomSheetCenter
 import com.example.androiddevchallenge.ui.theme.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window,false)
+
         setContent {
             MyTheme {
                 MyApp()
@@ -109,7 +119,7 @@ fun MyApp() {
                         .padding(20.dp)
                 ) {
                     Text(
-                        "Today, 12 May 19",
+                        "Today" + ", 12 May 19",
                         color = Color.White,
                         style = myStyle,
                         modifier = Modifier.padding(top = 76.dp)
