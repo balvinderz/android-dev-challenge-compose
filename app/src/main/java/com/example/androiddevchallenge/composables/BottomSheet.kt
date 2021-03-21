@@ -17,28 +17,27 @@ package com.example.androiddevchallenge.composables
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawStyle
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -97,7 +96,7 @@ fun BottomSheet(expanded: Boolean, temperatureType: TemperatureType) {
                         .padding(top = 10.dp),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally,) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Image(
                             painter = painterResource(id = R.drawable.sunrise_icon),
                             contentDescription = null
@@ -236,7 +235,7 @@ fun BottomSheet(expanded: Boolean, temperatureType: TemperatureType) {
                                 fontSize = 41.sp,
                                 fontWeight = FontWeight.Bold,
 
-                            )
+                                )
                         )
                         Text(
                             "°",
@@ -246,7 +245,7 @@ fun BottomSheet(expanded: Boolean, temperatureType: TemperatureType) {
                             )
                         )
                         Text(
-                            if (convertToFahrenheit)"F" else "C",
+                            if (convertToFahrenheit) "F" else "C",
                             style = myStyleBlackColor.copy(
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 25.sp
@@ -282,7 +281,7 @@ fun BottomSheet(expanded: Boolean, temperatureType: TemperatureType) {
                             .padding(top = 10.dp),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally,) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Image(
                                 painter = painterResource(id = R.drawable.sunrise_icon),
                                 contentDescription = null
@@ -354,6 +353,23 @@ fun BottomSheet(expanded: Boolean, temperatureType: TemperatureType) {
                         contentDescription = null,
                         modifier = Modifier.padding(top = 20.dp)
                     )
+                    Canvas(modifier = Modifier.size(106.dp)) {
+                        val canvasWidth = size.width
+                        val canvasHeight = size.height
+                        withTransform({
+                            translate(left = 11 / 5F)
+                            rotate(degrees = 52f)
+                        }) {
+                            drawArc(
+                                color = Color(0xFFEBEBEB),
+                             startAngle = 70F, sweepAngle = 290F, useCenter = false , topLeft = Offset.Zero, style = Stroke(
+                            width = 5f
+                            ) )
+
+                        }
+                    }
+
+
                     LazyRow(modifier = Modifier.padding(horizontal = 15.dp, vertical = 22.dp)) {
                         items(count = 10) {
                             Column() {
@@ -385,7 +401,7 @@ fun BottomSheet(expanded: Boolean, temperatureType: TemperatureType) {
                                         )
                                     )
                                     Text(
-                                        if (2 * (it - 1) >= 12)"PM" else "AM",
+                                        if (2 * (it - 1) >= 12) "PM" else "AM",
                                         style = myStyleBlackColor.copy(
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Medium
@@ -444,6 +460,7 @@ fun BottomSheet(expanded: Boolean, temperatureType: TemperatureType) {
             }
     }
 }
+
 @ExperimentalAnimationApi
 @Preview(widthDp = 600, heightDp = 250)
 @Composable
