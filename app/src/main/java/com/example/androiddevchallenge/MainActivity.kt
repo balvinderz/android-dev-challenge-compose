@@ -15,22 +15,18 @@
  */
 package com.example.androiddevchallenge
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Space
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowCircleUp
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.runtime.Composable
@@ -44,6 +40,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -77,37 +74,52 @@ class MainActivity : AppCompatActivity() {
 @ExperimentalAnimationApi
 @Composable
 fun MyApp() {
-    val gradient1 = listOf<Color>(Color(0xFF8C2480),Color(0xFFCE587D),Color(0xFFFF9485),Color(0xFFFF9D80),Color(0xFFFFBD73),Color(0xFFFFFF))
-    val gradient2 =listOf(
-        Color(0xFF262F69),
-        Color(0xFF3B4791),
-        Color(0xFF829BBF),
-        Color(0xFFFFB98D)
-    )
+    val theme : TimeBasedTheme = getTheme()
+
     val expanded = remember {
-        mutableStateOf(true    )
+        mutableStateOf(false     )
     }
+    val temperatureType = remember {
+        mutableStateOf(TemperatureType.Celcius)
+    }
+    val convertToFahrenheit= temperatureType.value == TemperatureType.Fahrenheit;
+
+    var floatingButtonContentDescription ="Open Bottom Sheet";
+    if(expanded.value)
+        floatingButtonContentDescription ="Close Bottom Sheet";
     Surface(color = MaterialTheme.colors.background) {
         Box(modifier = Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
 
-                    colors = gradient1
+                    colors = theme.gradientColors
 
                 )
             )) {
+            if(!expanded.value)
             Row(                modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 50.dp, end = 20.dp),horizontalArrangement = Arrangement.End) {
                 Text("C°",style = myStyle.copy(
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                ))
+                    fontWeight = FontWeight.Medium,
+                    color =  theme.textColor
+                ),modifier = Modifier.clickable {
+                    temperatureType.value = TemperatureType.Celcius
+                }.semantics {
+                    contentDescription ="Celcius"
+                }.alpha(getAlpha(temperatureType =temperatureType.value  , textType = "Celcius")))
             Text("/F°",style = myStyle.copy(
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            ),modifier = Modifier.alpha(0.5f))
+                fontWeight = FontWeight.Medium,
+                color =  theme.textColor
+
+            ),modifier = Modifier.semantics {
+                contentDescription ="Fahrenheit"
+            }.alpha(getAlpha(temperatureType = temperatureType.value ,textType = "Fahrenheit") ).clickable {
+                temperatureType.value =TemperatureType.Fahrenheit
+            })
             }
 
             Column() {
@@ -117,32 +129,38 @@ fun MyApp() {
                         .padding(20.dp)
                 ) {
                     Text(
-                        "Today" + ", 12 May 19",
-                        color = Color.White,
+                        "Today" + ", "+ getTodaysDate(),
+                        color =  theme.textColor,
                         style = myStyle,
                         modifier = Modifier.padding(top = 76.dp)
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        "Current Location", color = Color.White, style = myStyle.copy(
+                        "India", style = myStyle.copy(
                             fontWeight = FontWeight.Medium,
-                            fontSize = 17.sp
-                        )
+                            fontSize = 17.sp,
+                            color =  theme.textColor,
+
+                            )
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     Row(horizontalArrangement = Arrangement.SpaceBetween) {
                         Column() {
                             Text(
-                                "DAY 42°", color = Color.White, style = myStyle.copy(
+                                "DAY "+42.convertToFahrenheit(convertToFahrenheit)+"°", style = myStyle.copy(
                                     fontWeight = FontWeight.Medium,
-                                    fontSize = 17.sp
-                                )
+                                    fontSize = 17.sp,
+                                    color =  theme.textColor,
+
+                                    )
                             )
                             Text(
-                                "NIGHT 28°", color = Color.White, style = myStyle.copy(
+                                "NIGHT "+28.convertToFahrenheit(convertToFahrenheit)+"°", style = myStyle.copy(
                                     fontWeight = FontWeight.Medium,
-                                    fontSize = 17.sp
-                                )
+                                    fontSize = 17.sp,
+                                    color =  theme.textColor,
+
+                                    )
                             )
                         }
                         Column(
@@ -155,37 +173,44 @@ fun MyApp() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Image(
-                                    painter = painterResource(id = R.drawable.sunny_with_cloud),
+                                    painter = painterResource(id = getIcon(theme),),
                                     contentDescription = null
                                 )
                                 Spacer(modifier = Modifier.width(10.3.dp))
                                 Text(
-                                    "27", style = myStyle.copy(
+                                    "${27.convertToFahrenheit(convertToFahrenheit)}", style = myStyle.copy(
                                         fontSize = 59.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.White,
+                                        color =  theme.textColor,
+
 
                                         )
                                 )
                                 Text(
                                     "°", style = myStyle.copy(
                                         fontWeight = FontWeight.Medium,
-                                        fontSize = 29.sp
-                                    )
+                                        fontSize = 29.sp,
+                                        color =  theme.textColor,
+
+                                        )
                                 )
                                 Text(
-                                    "C", style = myStyle.copy(
+                                    if(temperatureType.value == TemperatureType.Celcius)"C" else "F"    , style = myStyle.copy(
                                         fontWeight = FontWeight.Medium,
-                                        fontSize = 36.sp
-                                    )
+                                        fontSize = 36.sp,
+                                        color =  theme.textColor,
+
+                                        )
                                 )
                             }
                             Text(
                                 "Sunny with periodic \n" +
                                         "clouds", style = myStyle.copy(
                                     fontWeight = FontWeight.Medium,
-                                    fontSize = 15.sp
-                                ), textAlign = TextAlign.Center
+                                    fontSize = 15.sp,
+                                    color =  theme.textColor,
+
+                                    ), textAlign = TextAlign.Center,
                             )
                         }
                     }
@@ -193,38 +218,85 @@ fun MyApp() {
 
 
             }
-            Image(
-                painter = painterResource(id = R.drawable.landscape_2),
-                contentDescription = null,
-                modifier = Modifier
+            Column(modifier = Modifier.fillMaxSize(),verticalArrangement = Arrangement.Bottom) {
+                Image(
+                    painter = painterResource(id = theme.backgroundImage),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 200.dp),
+                    contentScale = ContentScale.FillWidth
+                )
+            }
+            Column(modifier = Modifier.fillMaxSize(),verticalArrangement = Arrangement.Bottom) {
+                Box(modifier = Modifier
+                    .height(250.dp)
                     .fillMaxWidth()
-                    .padding(top = 220.dp),
-                contentScale = ContentScale.FillWidth
-            )
+                    .clip(
+                        RoundedCornerShape(
+                            topEnd = 40.dp,
+                            topStart = 40.dp
+                        )
+                    )
+                    .background(Color.White))
+            }
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
                 Box(
                     Modifier
                         .fillMaxWidth()
                         .padding(top = 20.dp)){
-                    BottomSheet(expanded = expanded.value)
+
+                    BottomSheet(expanded = expanded.value,temperatureType = temperatureType.value )
+
                     Row(modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 36.dp, top = 20.dp),horizontalArrangement = Arrangement.End){
-                        FloatingActionButton(onClick = { expanded.value = !expanded.value   },backgroundColor =  yellowish,modifier = Modifier.size(36.dp).semantics {
-                            accessibilityLabel = "Open Bottom Sheet"
-                        }) {
-                            Icon(if(expanded.value) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,tint = Color.Black ,contentDescription = null)
+                        .padding(end = 36.dp, top = 20.dp),horizontalArrangement = Arrangement.End) {
+                        FloatingActionButton(onClick = { expanded.value = !expanded.value },
+                            backgroundColor = theme.fabColor,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .semantics() {
+                                    contentDescription = floatingButtonContentDescription
+
+
+                                }) {
+                            Icon(
+                                if (expanded.value) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,
+                                tint = theme.fabIconColor,
+                                contentDescription = null
+                            )
                         }
                     }
-                    androidx.compose.animation.AnimatedVisibility(visible =!expanded.value ) {
-                        BottomSheetCenter()
-
+                    androidx.compose.animation.AnimatedVisibility(visible = !expanded.value) {
+                        BottomSheetCenter(theme = theme,temperatureType = temperatureType.value)
                     }
-                }
-                
+                   }
 
-            }}}
 
+            }
+
+        }}
+
+}
+
+fun getAlpha(temperatureType: TemperatureType, textType : String ): Float {
+ if(textType == "Fahrenheit" &&temperatureType == TemperatureType.Fahrenheit) {
+     return 1.0f
+ }
+ else {
+     if(textType == "Celcius" && temperatureType == TemperatureType.Celcius)
+         return 1.0f;
+
+ }
+    return 0.5f;
+
+
+ }
+
+fun getIcon(theme: TimeBasedTheme): Int {
+    if(theme.textColor == blackish)
+        return R.drawable.sunny_with_cloud_black
+    return R.drawable.sunny_with_cloud
 }
 
 @ExperimentalAnimationApi

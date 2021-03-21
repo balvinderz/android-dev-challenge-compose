@@ -18,9 +18,12 @@ import androidx.compose.ui.unit.sp
 import com.example.androiddevchallenge.ui.theme.blackish
 import com.example.androiddevchallenge.ui.theme.myStyle
 import com.example.androiddevchallenge.R
+import com.example.androiddevchallenge.TemperatureType
+import com.example.androiddevchallenge.getCurrentTime
+import com.example.androiddevchallenge.ui.theme.TimeBasedTheme
 
 @Composable
-fun BottomSheetCenter() {
+fun BottomSheetCenter(theme : TimeBasedTheme,temperatureType : TemperatureType) {
     Row(
         modifier = Modifier
             .fillMaxWidth(), horizontalArrangement = Arrangement.Center
@@ -32,7 +35,7 @@ fun BottomSheetCenter() {
                         11.dp
                     )
                 )
-                .background(color = Color(0xFFFEC86F))
+                .background(color = theme.cardColor)
         ) {
             Column(
                 modifier = Modifier
@@ -61,7 +64,7 @@ fun BottomSheetCenter() {
                         )
                     )
                     Text(
-                        "C", style = myStyle.copy(
+                        if(temperatureType == TemperatureType.Celcius)"C" else "F" , style = myStyle.copy(
                             fontWeight = FontWeight.Normal,
                             color = blackish,
                             fontSize = 11.sp
@@ -69,9 +72,9 @@ fun BottomSheetCenter() {
                     )
                 }
 
-                Column(modifier = Modifier.padding(top = 5.dp).height(26.dp).fillMaxWidth().background(color = Color(0xFFFDD38B)),verticalArrangement = Arrangement.Center,horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.padding(top = 5.dp).height(26.dp).fillMaxWidth().background(color = theme.fabColor),verticalArrangement = Arrangement.Center,horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        "15:25",
+                        getCurrentTime(),
                         style = myStyle.copy(
                             color = blackish,
                             fontWeight = FontWeight.Normal,

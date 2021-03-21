@@ -23,16 +23,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.androiddevchallenge.*
+import com.example.androiddevchallenge.R
 import com.example.androiddevchallenge.ui.theme.blackish
 import com.example.androiddevchallenge.ui.theme.myStyle
-import com.example.androiddevchallenge.R
 import com.example.androiddevchallenge.ui.theme.grayish
 import com.example.androiddevchallenge.ui.theme.myStyleBlackColor
 
 @ExperimentalAnimationApi
 @Composable
-fun BottomSheet(expanded  : Boolean ){
+fun BottomSheet(expanded  : Boolean , temperatureType : TemperatureType ){
+    val sunriseTime = remember {generateRandomTime(5,7)}
+    val convertToFahrenheit = temperatureType == TemperatureType.Fahrenheit
 
+    val windTime =  remember {generateRandomTime(8,10)}
+    val sunsetTime =  remember {generateRandomTime(18,20)}
         var height = 250
     if (expanded )
         height = 760
@@ -80,7 +85,7 @@ fun BottomSheet(expanded  : Boolean ){
                             )
                         )
                         Text(
-                            "05:04", style = myStyle.copy(
+                            generateRandomTime(5,7), style = myStyle.copy(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = blackish
@@ -100,7 +105,7 @@ fun BottomSheet(expanded  : Boolean ){
                             )
                         )
                         Text(
-                            "05:04", style = myStyle.copy(
+                            sunriseTime, style = myStyle.copy(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = blackish
@@ -120,7 +125,7 @@ fun BottomSheet(expanded  : Boolean ){
                             )
                         )
                         Text(
-                            "18:45", style = myStyle.copy(
+                            sunsetTime, style = myStyle.copy(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = blackish
@@ -168,13 +173,13 @@ fun BottomSheet(expanded  : Boolean ){
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
-                            "Today, 12 May 19", style = myStyleBlackColor.copy(
+                            "Today, "+ getTodaysDate(), style = myStyleBlackColor.copy(
                                 fontSize = 19.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
                         )
                         Text(
-                            "Current Location", style = myStyleBlackColor.copy(
+                            "India", style = myStyleBlackColor.copy(
                                 fontSize = 19.sp,
                                 fontWeight = FontWeight.Medium
                             ), modifier = Modifier.padding(top = 10.dp)
@@ -190,7 +195,7 @@ fun BottomSheet(expanded  : Boolean ){
                             )
                             Spacer(modifier = Modifier.width(10.3.dp))
                             Text(
-                                "27", style = myStyleBlackColor.copy(
+                                "${27.convertToFahrenheit(convert =convertToFahrenheit )}", style = myStyleBlackColor.copy(
                                     fontSize = 41.sp,
                                     fontWeight = FontWeight.Bold,
 
@@ -203,7 +208,7 @@ fun BottomSheet(expanded  : Boolean ){
                                 )
                             )
                             Text(
-                                "C", style = myStyleBlackColor.copy(
+                                if(convertToFahrenheit)"F" else "C", style = myStyleBlackColor.copy(
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 25.sp
                                 )
@@ -249,7 +254,7 @@ fun BottomSheet(expanded  : Boolean ){
                                     )
                                 )
                                 Text(
-                                    "05:04", style = myStyle.copy(
+                                   sunsetTime, style = myStyle.copy(
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Medium,
                                         color = blackish
@@ -269,7 +274,7 @@ fun BottomSheet(expanded  : Boolean ){
                                     )
                                 )
                                 Text(
-                                    "05:04", style = myStyle.copy(
+                                    windTime, style = myStyle.copy(
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Medium,
                                         color = blackish
@@ -289,7 +294,7 @@ fun BottomSheet(expanded  : Boolean ){
                                     )
                                 )
                                 Text(
-                                    "18:45", style = myStyle.copy(
+                                    sunsetTime, style = myStyle.copy(
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Medium,
                                         color = blackish
@@ -314,7 +319,7 @@ fun BottomSheet(expanded  : Boolean ){
                                             contentDescription = null
                                         )
                                         Text(
-                                            "30°", style = myStyleBlackColor.copy(
+                                            (12..40).random().toString()+"°", style = myStyleBlackColor.copy(
                                                 fontWeight = FontWeight.SemiBold,
                                                 fontSize = 17.sp
                                             )
@@ -325,13 +330,13 @@ fun BottomSheet(expanded  : Boolean ){
                                         modifier = Modifier.padding(start = 5.dp, top = 3.dp)
                                     ) {
                                         Text(
-                                            "6-8  ", style = myStyleBlackColor.copy(
+                                            "${2*(it-1)+6}-${2*(it-1)+8}  ", style = myStyleBlackColor.copy(
                                                 fontSize = 13.sp,
                                                 fontWeight = FontWeight.Medium
                                             )
                                         )
                                         Text(
-                                            "AM", style = myStyleBlackColor.copy(
+                                            if(2*(it-1)>=12)"PM" else "AM", style = myStyleBlackColor.copy(
                                                 fontSize = 11.sp,
                                                 fontWeight = FontWeight.Medium
                                             )
@@ -388,6 +393,6 @@ fun BottomSheet(expanded  : Boolean ){
 @Composable
 fun BottomSheetPreview(){
     Surface(color = Color.White) {
-        BottomSheet(expanded = true )
+        BottomSheet(expanded = true,temperatureType = TemperatureType.Celcius )
     }
 }

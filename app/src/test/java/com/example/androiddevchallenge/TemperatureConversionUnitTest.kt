@@ -2,7 +2,7 @@ package com.example.androiddevchallenge
 
 import org.junit.Test
 
-class CelciusToFahrenheit {
+class TemperatureConversionUnitTest {
     @Test
     fun celciusToFahrenheit_formula_test(){
         assert(celciusToF(celcius = 100f)==212f)
