@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,11 +57,8 @@ import androidx.core.view.WindowCompat
 import com.example.androiddevchallenge.composables.BottomSheet
 import com.example.androiddevchallenge.composables.BottomSheetCenter
 import com.example.androiddevchallenge.ui.theme.*
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -212,7 +210,9 @@ fun MyApp() {
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .padding(end = 36.dp, top = 20.dp),horizontalArrangement = Arrangement.End){
-                        FloatingActionButton(onClick = { expanded.value = !expanded.value   },backgroundColor =  yellowish,modifier = Modifier.size(36.dp)) {
+                        FloatingActionButton(onClick = { expanded.value = !expanded.value   },backgroundColor =  yellowish,modifier = Modifier.size(36.dp).semantics {
+                            accessibilityLabel = "Open Bottom Sheet"
+                        }) {
                             Icon(if(expanded.value) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,tint = Color.Black ,contentDescription = null)
                         }
                     }
