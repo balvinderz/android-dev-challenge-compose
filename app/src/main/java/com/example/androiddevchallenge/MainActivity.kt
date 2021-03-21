@@ -23,9 +23,23 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
@@ -42,25 +56,24 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.example.androiddevchallenge.composables.BottomSheet
 import com.example.androiddevchallenge.composables.BottomSheetCenter
-import com.example.androiddevchallenge.ui.theme.*
-
+import com.example.androiddevchallenge.ui.theme.MyTheme
+import com.example.androiddevchallenge.ui.theme.TimeBasedTheme
+import com.example.androiddevchallenge.ui.theme.blackish
+import com.example.androiddevchallenge.ui.theme.myStyle
 class MainActivity : AppCompatActivity() {
 
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window,false)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             MyTheme {
@@ -74,53 +87,66 @@ class MainActivity : AppCompatActivity() {
 @ExperimentalAnimationApi
 @Composable
 fun MyApp() {
-    val theme : TimeBasedTheme = getTheme()
+    val theme: TimeBasedTheme = getTheme()
 
     val expanded = remember {
-        mutableStateOf(false     )
+        mutableStateOf(false)
     }
     val temperatureType = remember {
         mutableStateOf(TemperatureType.Celcius)
     }
-    val convertToFahrenheit= temperatureType.value == TemperatureType.Fahrenheit;
+    val convertToFahrenheit = temperatureType.value == TemperatureType.Fahrenheit
 
-    var floatingButtonContentDescription ="Open Bottom Sheet";
-    if(expanded.value)
-        floatingButtonContentDescription ="Close Bottom Sheet";
+    var floatingButtonContentDescription = "Open Bottom Sheet"
+    if (expanded.value)
+        floatingButtonContentDescription = "Close Bottom Sheet"
     Surface(color = MaterialTheme.colors.background) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-
-                    colors = theme.gradientColors
-
-                )
-            )) {
-            if(!expanded.value)
-            Row(                modifier = Modifier
+        Box(
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 50.dp, end = 20.dp),horizontalArrangement = Arrangement.End) {
-                Text("C°",style = myStyle.copy(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color =  theme.textColor
-                ),modifier = Modifier.clickable {
-                    temperatureType.value = TemperatureType.Celcius
-                }.semantics {
-                    contentDescription ="Celcius"
-                }.alpha(getAlpha(temperatureType =temperatureType.value  , textType = "Celcius")))
-            Text("/F°",style = myStyle.copy(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color =  theme.textColor
+                .background(
+                    brush = Brush.verticalGradient(
 
-            ),modifier = Modifier.semantics {
-                contentDescription ="Fahrenheit"
-            }.alpha(getAlpha(temperatureType = temperatureType.value ,textType = "Fahrenheit") ).clickable {
-                temperatureType.value =TemperatureType.Fahrenheit
-            })
-            }
+                        colors = theme.gradientColors
+
+                    )
+                )
+        ) {
+            if (!expanded.value)
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 50.dp, end = 20.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        "C°",
+                        style = myStyle.copy(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = theme.textColor
+                        ),
+                        modifier = Modifier.clickable {
+                            temperatureType.value = TemperatureType.Celcius
+                        }.semantics {
+                            contentDescription = "Celcius"
+                        }.alpha(getAlpha(temperatureType = temperatureType.value, textType = "Celcius"))
+                    )
+                    Text(
+                        "/F°",
+                        style = myStyle.copy(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = theme.textColor
+
+                        ),
+                        modifier = Modifier.semantics {
+                            contentDescription = "Fahrenheit"
+                        }.alpha(getAlpha(temperatureType = temperatureType.value, textType = "Fahrenheit")).clickable {
+                            temperatureType.value = TemperatureType.Fahrenheit
+                        }
+                    )
+                }
 
             Column() {
                 Column(
@@ -129,38 +155,41 @@ fun MyApp() {
                         .padding(20.dp)
                 ) {
                     Text(
-                        "Today" + ", "+ getTodaysDate(),
-                        color =  theme.textColor,
+                        "Today" + ", " + getTodaysDate(),
+                        color = theme.textColor,
                         style = myStyle,
                         modifier = Modifier.padding(top = 76.dp)
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        "India", style = myStyle.copy(
+                        "India",
+                        style = myStyle.copy(
                             fontWeight = FontWeight.Medium,
                             fontSize = 17.sp,
-                            color =  theme.textColor,
+                            color = theme.textColor,
 
-                            )
+                        )
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     Row(horizontalArrangement = Arrangement.SpaceBetween) {
                         Column() {
                             Text(
-                                "DAY "+42.convertToFahrenheit(convertToFahrenheit)+"°", style = myStyle.copy(
+                                "DAY " + 42.convertToFahrenheit(convertToFahrenheit) + "°",
+                                style = myStyle.copy(
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 17.sp,
-                                    color =  theme.textColor,
+                                    color = theme.textColor,
 
-                                    )
+                                )
                             )
                             Text(
-                                "NIGHT "+28.convertToFahrenheit(convertToFahrenheit)+"°", style = myStyle.copy(
+                                "NIGHT " + 28.convertToFahrenheit(convertToFahrenheit) + "°",
+                                style = myStyle.copy(
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 17.sp,
-                                    color =  theme.textColor,
+                                    color = theme.textColor,
 
-                                    )
+                                )
                             )
                         }
                         Column(
@@ -178,47 +207,49 @@ fun MyApp() {
                                 )
                                 Spacer(modifier = Modifier.width(10.3.dp))
                                 Text(
-                                    "${27.convertToFahrenheit(convertToFahrenheit)}", style = myStyle.copy(
+                                    "${27.convertToFahrenheit(convertToFahrenheit)}",
+                                    style = myStyle.copy(
                                         fontSize = 59.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color =  theme.textColor,
+                                        color = theme.textColor,
 
-
-                                        )
+                                    )
                                 )
                                 Text(
-                                    "°", style = myStyle.copy(
+                                    "°",
+                                    style = myStyle.copy(
                                         fontWeight = FontWeight.Medium,
                                         fontSize = 29.sp,
-                                        color =  theme.textColor,
+                                        color = theme.textColor,
 
-                                        )
+                                    )
                                 )
                                 Text(
-                                    if(temperatureType.value == TemperatureType.Celcius)"C" else "F"    , style = myStyle.copy(
+                                    if (temperatureType.value == TemperatureType.Celcius)"C" else "F",
+                                    style = myStyle.copy(
                                         fontWeight = FontWeight.Medium,
                                         fontSize = 36.sp,
-                                        color =  theme.textColor,
+                                        color = theme.textColor,
 
-                                        )
+                                    )
                                 )
                             }
                             Text(
                                 "Sunny with periodic \n" +
-                                        "clouds", style = myStyle.copy(
+                                    "clouds",
+                                style = myStyle.copy(
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 15.sp,
-                                    color =  theme.textColor,
+                                    color = theme.textColor,
 
-                                    ), textAlign = TextAlign.Center,
+                                ),
+                                textAlign = TextAlign.Center,
                             )
                         }
                     }
                 }
-
-
             }
-            Column(modifier = Modifier.fillMaxSize(),verticalArrangement = Arrangement.Bottom) {
+            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
                 Image(
                     painter = painterResource(id = theme.backgroundImage),
                     contentDescription = null,
@@ -228,38 +259,44 @@ fun MyApp() {
                     contentScale = ContentScale.FillWidth
                 )
             }
-            Column(modifier = Modifier.fillMaxSize(),verticalArrangement = Arrangement.Bottom) {
-                Box(modifier = Modifier
-                    .height(250.dp)
-                    .fillMaxWidth()
-                    .clip(
-                        RoundedCornerShape(
-                            topEnd = 40.dp,
-                            topStart = 40.dp
+            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
+                Box(
+                    modifier = Modifier
+                        .height(250.dp)
+                        .fillMaxWidth()
+                        .clip(
+                            RoundedCornerShape(
+                                topEnd = 40.dp,
+                                topStart = 40.dp
+                            )
                         )
-                    )
-                    .background(Color.White))
+                        .background(Color.White)
+                )
             }
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = 20.dp)){
+                        .padding(top = 20.dp)
+                ) {
 
-                    BottomSheet(expanded = expanded.value,temperatureType = temperatureType.value )
+                    BottomSheet(expanded = expanded.value, temperatureType = temperatureType.value)
 
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 36.dp, top = 20.dp),horizontalArrangement = Arrangement.End) {
-                        FloatingActionButton(onClick = { expanded.value = !expanded.value },
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 36.dp, top = 20.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        FloatingActionButton(
+                            onClick = { expanded.value = !expanded.value },
                             backgroundColor = theme.fabColor,
                             modifier = Modifier
                                 .size(36.dp)
                                 .semantics() {
                                     contentDescription = floatingButtonContentDescription
-
-
-                                }) {
+                                }
+                        ) {
                             Icon(
                                 if (expanded.value) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,
                                 tint = theme.fabIconColor,
@@ -268,33 +305,26 @@ fun MyApp() {
                         }
                     }
                     androidx.compose.animation.AnimatedVisibility(visible = !expanded.value) {
-                        BottomSheetCenter(theme = theme,temperatureType = temperatureType.value)
+                        BottomSheetCenter(theme = theme, temperatureType = temperatureType.value)
                     }
-                   }
-
-
+                }
             }
-
-        }}
-
+        }
+    }
 }
 
-fun getAlpha(temperatureType: TemperatureType, textType : String ): Float {
- if(textType == "Fahrenheit" &&temperatureType == TemperatureType.Fahrenheit) {
-     return 1.0f
- }
- else {
-     if(textType == "Celcius" && temperatureType == TemperatureType.Celcius)
-         return 1.0f;
-
- }
-    return 0.5f;
-
-
- }
+fun getAlpha(temperatureType: TemperatureType, textType: String): Float {
+    if (textType == "Fahrenheit" && temperatureType == TemperatureType.Fahrenheit) {
+        return 1.0f
+    } else {
+        if (textType == "Celcius" && temperatureType == TemperatureType.Celcius)
+            return 1.0f
+    }
+    return 0.5f
+}
 
 fun getIcon(theme: TimeBasedTheme): Int {
-    if(theme.textColor == blackish)
+    if (theme.textColor == blackish)
         return R.drawable.sunny_with_cloud_black
     return R.drawable.sunny_with_cloud
 }

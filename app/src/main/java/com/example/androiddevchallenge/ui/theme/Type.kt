@@ -31,13 +31,13 @@ public val Montserrat = FontFamily(
     Font(R.font.montserrat_medium, FontWeight.Medium),
     Font(R.font.montserrat_semibold, FontWeight.SemiBold)
 )
-public val myStyle   = TextStyle(
+public val myStyle = TextStyle(
     fontFamily = Montserrat,
     fontSize = 19.sp,
     fontWeight = FontWeight.SemiBold,
     color = Color.White
 )
-public val myStyleBlackColor   = TextStyle(
+public val myStyleBlackColor = TextStyle(
     fontFamily = Montserrat,
     fontSize = 19.sp,
     fontWeight = FontWeight.SemiBold,
