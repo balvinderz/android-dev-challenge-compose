@@ -25,15 +25,20 @@ import com.example.androiddevchallenge.ui.theme.TimeBasedTheme
 import java.util.Calendar
 import java.util.Date
 
-fun celciusToF(celcius: Float): Float {
-    return celcius * 1.8f + 32.00f
+fun celsiusToF(celsius: Float): Float {
+    return celsius * 1.8f + 32.00f
 }
-fun fahrenheitToC(fahrenHeit: Float): Float {
-    return (fahrenHeit - 32.00f) / 1.8f
+fun fahrenheitToC(fahrenheit: Float): Float {
+    return (fahrenheit - 32.00f) / 1.8f
 }
 enum class TemperatureType {
-    Celcius,
+    Celsius,
     Fahrenheit
+}
+enum class ExpandedSheetState{
+    Today,
+    Tomorrow,
+    Next7Days
 }
 fun generateRandomTime(start: Int, end: Int): String {
     val hour: Int = (start..end).random()
@@ -43,10 +48,10 @@ fun generateRandomTime(start: Int, end: Int): String {
 
     return "$hour:$minute"
 }
-fun getTodaysDate(): String {
+fun getTodaysDate(offset : Int = 0): String {
     val months = listOf("January", "February", "March", "May", "June", "July", "August", "September", "October", "November", "December")
-    val date = Date()
     val calendar: Calendar = Calendar.getInstance()
+    calendar.add(Calendar.DAY_OF_MONTH,offset)
     return "${calendar.get(Calendar.DAY_OF_MONTH)} ${months[calendar.get(Calendar.MONTH)]} ${calendar.get(Calendar.YEAR)}"
 }
 fun getCurrentTime(): String {

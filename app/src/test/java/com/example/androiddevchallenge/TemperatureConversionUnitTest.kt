@@ -19,11 +19,11 @@ import org.junit.Test
 
 class TemperatureConversionUnitTest {
     @Test
-    fun celciusToFahrenheit_formula_test() {
-        assert(celciusToF(celcius = 100f) == 212f)
+    fun celsiusToFahrenheit_formula_test() {
+        assert(celsiusToF(celsius = 100f) == 212f)
     }
     @Test
-    fun fahrenheitToCelcius_formula_test() {
+    fun fahrenheitToCelsius_formula_test() {
         assert(fahrenheitToC(212f) == 100f)
     }
 }

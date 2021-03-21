@@ -18,7 +18,6 @@ package com.example.androiddevchallenge
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,17 +31,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +47,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -63,11 +57,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.example.androiddevchallenge.composables.BottomSheet
-import com.example.androiddevchallenge.composables.BottomSheetCenter
 import com.example.androiddevchallenge.ui.theme.MyTheme
 import com.example.androiddevchallenge.ui.theme.TimeBasedTheme
 import com.example.androiddevchallenge.ui.theme.blackish
 import com.example.androiddevchallenge.ui.theme.myStyle
+
 class MainActivity : AppCompatActivity() {
 
     @ExperimentalAnimationApi
@@ -90,16 +84,12 @@ fun MyApp() {
     val theme: TimeBasedTheme = getTheme()
 
     val expanded = remember {
-        mutableStateOf(false)
+        mutableStateOf(true  )
     }
     val temperatureType = remember {
-        mutableStateOf(TemperatureType.Celcius)
+        mutableStateOf(TemperatureType.Celsius)
     }
     val convertToFahrenheit = temperatureType.value == TemperatureType.Fahrenheit
-
-    var floatingButtonContentDescription = "Open Bottom Sheet"
-    if (expanded.value)
-        floatingButtonContentDescription = "Close Bottom Sheet"
     Surface(color = MaterialTheme.colors.background) {
         Box(
             modifier = Modifier
@@ -126,11 +116,19 @@ fun MyApp() {
                             fontWeight = FontWeight.Medium,
                             color = theme.textColor
                         ),
-                        modifier = Modifier.clickable {
-                            temperatureType.value = TemperatureType.Celcius
-                        }.semantics {
-                            contentDescription = "Celcius"
-                        }.alpha(getAlpha(temperatureType = temperatureType.value, textType = "Celcius"))
+                        modifier = Modifier
+                            .clickable {
+                                temperatureType.value = TemperatureType.Celsius
+                            }
+                            .semantics {
+                                contentDescription = "Celsius"
+                            }
+                            .alpha(
+                                getAlpha(
+                                    temperatureType = temperatureType.value,
+                                    type = "Celsius"
+                                )
+                            )
                     )
                     Text(
                         "/F°",
@@ -140,11 +138,19 @@ fun MyApp() {
                             color = theme.textColor
 
                         ),
-                        modifier = Modifier.semantics {
-                            contentDescription = "Fahrenheit"
-                        }.alpha(getAlpha(temperatureType = temperatureType.value, textType = "Fahrenheit")).clickable {
-                            temperatureType.value = TemperatureType.Fahrenheit
-                        }
+                        modifier = Modifier
+                            .semantics {
+                                contentDescription = "Fahrenheit"
+                            }
+                            .alpha(
+                                getAlpha(
+                                    temperatureType = temperatureType.value,
+                                    type = "Fahrenheit"
+                                )
+                            )
+                            .clickable {
+                                temperatureType.value = TemperatureType.Fahrenheit
+                            }
                     )
                 }
 
@@ -155,7 +161,8 @@ fun MyApp() {
                         .padding(20.dp)
                 ) {
                     Text(
-                        "Today" + ", " + getTodaysDate(),
+                        if(!expanded.value){
+                        "Today" + ", " + getTodaysDate()} else "",
                         color = theme.textColor,
                         style = myStyle,
                         modifier = Modifier.padding(top = 76.dp)
@@ -174,7 +181,7 @@ fun MyApp() {
                     Row(horizontalArrangement = Arrangement.SpaceBetween) {
                         Column() {
                             Text(
-                                "DAY " + 42.convertToFahrenheit(convertToFahrenheit) + "°",
+                                stringResource(id = R.string.day)+" " + 42.convertToFahrenheit(convertToFahrenheit) + "°",
                                 style = myStyle.copy(
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 17.sp,
@@ -183,7 +190,7 @@ fun MyApp() {
                                 )
                             )
                             Text(
-                                "NIGHT " + 28.convertToFahrenheit(convertToFahrenheit) + "°",
+                                stringResource(id = R.string.night)+" " + 28.convertToFahrenheit(convertToFahrenheit) + "°",
                                 style = myStyle.copy(
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 17.sp,
@@ -225,7 +232,7 @@ fun MyApp() {
                                     )
                                 )
                                 Text(
-                                    if (temperatureType.value == TemperatureType.Celcius)"C" else "F",
+                                    if (temperatureType.value == TemperatureType.Celsius)"C" else "F",
                                     style = myStyle.copy(
                                         fontWeight = FontWeight.Medium,
                                         fontSize = 36.sp,
@@ -235,8 +242,9 @@ fun MyApp() {
                                 )
                             }
                             Text(
-                                "Sunny with periodic \n" +
-                                    "clouds",
+                                stringResource(id = R.string.sunny_with_periodic)+" \n" + stringResource(
+                                    id = R.string.clouds
+                                ),
                                 style = myStyle.copy(
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 15.sp,
@@ -280,44 +288,23 @@ fun MyApp() {
                         .padding(top = 20.dp)
                 ) {
 
-                    BottomSheet(expanded = expanded.value, temperatureType = temperatureType.value)
+                    BottomSheet(expanded = expanded.value, temperatureType = temperatureType.value,theme = theme, onClick = {
+                        expanded.value =!expanded.value
+                    })
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 36.dp, top = 20.dp),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        FloatingActionButton(
-                            onClick = { expanded.value = !expanded.value },
-                            backgroundColor = theme.fabColor,
-                            modifier = Modifier
-                                .size(36.dp)
-                                .semantics() {
-                                    contentDescription = floatingButtonContentDescription
-                                }
-                        ) {
-                            Icon(
-                                if (expanded.value) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,
-                                tint = theme.fabIconColor,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                    androidx.compose.animation.AnimatedVisibility(visible = !expanded.value) {
-                        BottomSheetCenter(theme = theme, temperatureType = temperatureType.value)
-                    }
+
+
                 }
             }
         }
     }
 }
 
-fun getAlpha(temperatureType: TemperatureType, textType: String): Float {
-    if (textType == "Fahrenheit" && temperatureType == TemperatureType.Fahrenheit) {
+fun getAlpha(temperatureType: TemperatureType, type: String ): Float {
+    if (type == "Fahrenheit" && temperatureType == TemperatureType.Fahrenheit) {
         return 1.0f
     } else {
-        if (textType == "Celcius" && temperatureType == TemperatureType.Celcius)
+        if (type == "Celsius"&& temperatureType == TemperatureType.Celsius)
             return 1.0f
     }
     return 0.5f

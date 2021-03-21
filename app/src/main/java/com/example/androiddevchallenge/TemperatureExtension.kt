@@ -19,5 +19,5 @@ fun Int.convertToFahrenheit(convert: Boolean): Int {
     if (!convert)
         return this
 
-    return celciusToF(this.toFloat()).toInt()
+    return celsiusToF(this.toFloat()).toInt()
 }

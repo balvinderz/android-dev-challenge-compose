@@ -44,9 +44,9 @@ import com.example.androiddevchallenge.ui.theme.blackish
 import com.example.androiddevchallenge.ui.theme.myStyle
 
 @Composable
-fun BottomSheetCenter(theme: TimeBasedTheme, temperatureType: TemperatureType) {
+fun BottomSheetCenter(theme: TimeBasedTheme, temperatureType: TemperatureType,modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
@@ -88,7 +88,7 @@ fun BottomSheetCenter(theme: TimeBasedTheme, temperatureType: TemperatureType) {
                         )
                     )
                     Text(
-                        if (temperatureType == TemperatureType.Celcius)"C" else "F",
+                        if (temperatureType == TemperatureType.Celsius)"C" else "F",
                         style = myStyle.copy(
                             fontWeight = FontWeight.Normal,
                             color = blackish,
