@@ -11,6 +11,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,7 +24,12 @@ import com.example.androiddevchallenge.ui.theme.myStyleBlackColor
 
 @Composable
 fun TemperatureWithTime(convertToFahrenheit: Boolean,modifier: Modifier = Modifier ) {
+    val temperatureTypeString = if(convertToFahrenheit) stringResource(id = R.string.farhenheit) else stringResource(
+        id = R.string.celsius
+    )
 
+    val contentDescriptionForCenterElement : String = stringResource(id = R.string.read_temperature,37.convertToFahrenheit(convertToFahrenheit),temperatureTypeString,
+        getCurrentTime())
     Box(modifier = modifier.size(106.dp))
     {
 
@@ -41,19 +48,19 @@ fun TemperatureWithTime(convertToFahrenheit: Boolean,modifier: Modifier = Modifi
             }
         }
 
-        Column() {
+        Column(modifier = Modifier.semantics(mergeDescendants = true ) {
+            contentDescription  =contentDescriptionForCenterElement
+        }) {
             Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.End)
             {
-                Image(painter =  painterResource(id = R.drawable.sun), contentDescription = stringResource(
-                                    R.string.sun)
+                Image(painter =  painterResource(id = R.drawable.sun),contentDescription = null
                                 )
             }
             Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center,verticalAlignment = Alignment.CenterVertically){
-                Image(painter = painterResource(id = R.drawable.therometer_small),contentDescription = stringResource(
-                                    R.string.thermometer)
+                Image(painter = painterResource(id = R.drawable.therometer_small),contentDescription = null
                                 )
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("${42.convertToFahrenheit(convertToFahrenheit)}°",style = myStyleBlackColor.copy(
+                Text("${37.convertToFahrenheit(convertToFahrenheit)}°",style = myStyleBlackColor.copy(
                     fontSize = 33.sp,
                     fontWeight = FontWeight.Normal
                 ))

@@ -44,7 +44,9 @@ fun ExpandedContent(
     currentState : ExpandedSheetState,
     modifier: Modifier = Modifier
 ) {
-
+    val temperatureTypeContentDescription = if(convertToFahrenheit) stringResource(id = R.string.farhenheit) else stringResource(
+        id = R.string.celsius
+    )
     Box(
         modifier = modifier
             .height(676.dp)
@@ -70,18 +72,30 @@ fun ExpandedContent(
                 LazyColumn(modifier = Modifier.padding(vertical =50.dp,horizontal = 25.dp)){
                     items(count = 7){
                         Column(modifier = Modifier.padding(vertical = 10.dp)){
-                            Row(modifier = Modifier.fillMaxWidth()){
+                            val nightTemperature =(10..20).random()
+                            val dayTemperature = (21..40).random()
+                            val date = getTodaysDate(offset = it+1)
+                            val description = stringResource(id = R.string.read_temperature_on_day,date,dayTemperature,temperatureTypeContentDescription,nightTemperature,temperatureTypeContentDescription)
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription =description
 
-                                Text(getTodaysDate(offset = it+1),style = myStyleBlackColor.copy(
+
+                                }){
+
+                                Text(date ,style = myStyleBlackColor.copy(
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.SemiBold,
                                 ),modifier = Modifier.fillMaxSize(0.50f))
-                                Text((21..40).random().toString()+"°",style = myStyleBlackColor.copy(
+                                Text(
+                                    "$dayTemperature°",style = myStyleBlackColor.copy(
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Normal ,
                                     textAlign = TextAlign.End
                                 ),modifier = Modifier.fillMaxSize(fraction = 0.50f))
-                                Text((21..40).random().toString()+"°",style = myStyleBlackColor.copy(
+                                Text(
+                                    "$nightTemperature°",style = myStyleBlackColor.copy(
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Normal ,
                                     textAlign = TextAlign.End
@@ -164,20 +178,31 @@ fun ExpandedContent(
                     fontWeight = FontWeight.Medium
                 )
             )
-            Row() {
+            Row(modifier = Modifier
+                .padding(top = 16.dp)
+                .semantics(mergeDescendants = true) {}) {
+                val dayText = stringResource(id = R.string.day)+" " + 42.convertToFahrenheit(convertToFahrenheit) + "°"
+                val nightText = stringResource(id = R.string.night)+" " + 28.convertToFahrenheit(convertToFahrenheit) + "°"
                 Text(
-                    stringResource(R.string.day) +" "+42.convertToFahrenheit(convertToFahrenheit)+"°", color = Color.White,
-                    style = myStyle.copy(
+                    dayText,
+                    style = myStyleBlackColor.copy(
                         fontWeight = FontWeight.Medium,
                         fontSize = 17.sp
-                    )
+                    ),
+                    modifier = Modifier.semantics {
+                        contentDescription = "$dayText$temperatureTypeContentDescription"
+                    }
                 )
+                Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    stringResource(R.string.night) +" "+28 .convertToFahrenheit(convertToFahrenheit)+"°", color = Color.White,
-                    style = myStyle.copy(
+                    nightText,
+                    style = myStyleBlackColor.copy(
                         fontWeight = FontWeight.Medium,
                         fontSize = 17.sp
-                    )
+                    ),
+                    modifier = Modifier.semantics {
+                        contentDescription = "$nightText$temperatureTypeContentDescription"
+                    }
                 )
             }
             SunriseWindSunsetTime(sunriseTime = sunriseTime, windTime = windTime, sunsetTime =sunsetTime )
@@ -185,11 +210,14 @@ fun ExpandedContent(
             TemperatureWithTime(convertToFahrenheit,modifier = Modifier)
             LazyRow(modifier = Modifier.padding(horizontal = 15.dp, vertical = 22.dp)) {
                 items(count = 10) {
-                    Column() {
-                        val temperature = (12..40).random()
-                        val temperatureType = if(convertToFahrenheit) stringResource(id = R.string.farhenheit) else stringResource(
-                            id = R.string.celsius)
-                        val contentDescription = null
+                    val temperature = (12..40).random()
+                    val text  = "${2 * (it - 1) + 6}-${2 * (it - 1) + 8}  "
+                    val pmOrAmText =  if ((2 * (it - 1)+8) >= 12) "PM" else "AM"
+                    val daysContentDescription = stringResource(id = R.string.read_temperature_on_day,text,pmOrAmText,temperature,temperatureTypeContentDescription)
+                    Column(modifier = Modifier.semantics(mergeDescendants = true ) {
+                        contentDescription = daysContentDescription
+                    }) {
+
                         Row(
                             modifier = Modifier.padding(end = 26.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -204,6 +232,8 @@ fun ExpandedContent(
                                     fontWeight = FontWeight.SemiBold,
                                     fontSize = 17.sp
                                 ),
+                                modifier = Modifier.semantics() {
+                                }
                             )
                         }
                         Row(
@@ -211,14 +241,14 @@ fun ExpandedContent(
                             modifier = Modifier.padding(start = 5.dp, top = 3.dp)
                         ) {
                             Text(
-                                "${2 * (it - 1) + 6}-${2 * (it - 1) + 8}  ",
+                                text ,
                                 style = myStyleBlackColor.copy(
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.Medium
                                 )
                             )
                             Text(
-                                if ((2 * (it - 1)+8) >= 12) "PM" else "AM",
+                                pmOrAmText ,
                                 style = myStyleBlackColor.copy(
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Medium
@@ -236,7 +266,7 @@ fun ExpandedContent(
                 ),
                 modifier = Modifier.padding(top = 13.dp, bottom = 10.dp)
             )
-            Row() {
+            Row(modifier = Modifier.semantics(mergeDescendants = true ) {  }) {
                 Text(
                     stringResource(R.string.humidity),
                     style = myStyleBlackColor.copy(
@@ -255,7 +285,9 @@ fun ExpandedContent(
                     modifier = Modifier.padding(start = 20.dp)
                 )
             }
-            Row(modifier = Modifier.padding(top = 10.dp,start = 10.dp)) {
+            Row(modifier = Modifier
+                .padding(top = 10.dp, start = 10.dp)
+                .semantics(mergeDescendants = true) { }) {
                 Text(
                     stringResource(R.string.uv_index),
                     style = myStyleBlackColor.copy(

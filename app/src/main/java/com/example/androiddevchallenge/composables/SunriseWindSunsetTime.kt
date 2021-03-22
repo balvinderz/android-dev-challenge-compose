@@ -8,6 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,19 +34,16 @@ fun SunriseWindSunsetTime(
             iconId = R.drawable.sunrise,
             text = stringResource(id = R.string.sunrise),
             time = sunriseTime,
-            contentDescription = stringResource(id = R.string.sunrise)
         )
         TimeColumn(
             iconId = R.drawable.wind,
             text = stringResource(id = R.string.wind),
             time = windTime,
-            contentDescription = stringResource(id = R.string.wind)
         )
         TimeColumn(
             iconId = R.drawable.sunset,
             text = stringResource(id = R.string.sunset),
             time = sunsetTime,
-            contentDescription = stringResource(id = R.string.sunset)
         )
     }
 }
@@ -54,13 +53,16 @@ private fun TimeColumn(
     iconId: Int,
     text: String,
     time: String,
-    contentDescription: String,
     modifier: Modifier = Modifier,
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
+    val contentDescriptionForTimeColumn =   "$text at $time";
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.semantics(mergeDescendants = true ) {
+        contentDescription = contentDescriptionForTimeColumn
+    }) {
         Image(
             painter = painterResource(id = iconId),
-            contentDescription = contentDescription
+            contentDescription = null
         )
         Text(
             text,

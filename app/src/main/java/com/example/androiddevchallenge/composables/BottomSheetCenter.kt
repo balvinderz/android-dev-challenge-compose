@@ -32,12 +32,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androiddevchallenge.R
 import com.example.androiddevchallenge.TemperatureType
+import com.example.androiddevchallenge.convertToFahrenheit
 import com.example.androiddevchallenge.getCurrentTime
 import com.example.androiddevchallenge.ui.theme.TimeBasedTheme
 import com.example.androiddevchallenge.ui.theme.blackish
@@ -45,14 +49,25 @@ import com.example.androiddevchallenge.ui.theme.myStyle
 
 @Composable
 fun BottomSheetCenter(theme: TimeBasedTheme, temperatureType: TemperatureType,modifier: Modifier = Modifier) {
+    val temperatureTypeContentDescription = if(temperatureType == TemperatureType.Fahrenheit) stringResource(id = R.string.farhenheit) else stringResource(
+        id = R.string.celsius
+    )
+    val convertToFahrenheit = temperatureType == TemperatureType.Fahrenheit
+    val contentDescriptionForCenterElement : String = stringResource(id = R.string.read_temperature,37.convertToFahrenheit(convertToFahrenheit),temperatureTypeContentDescription,
+        getCurrentTime())
     Row(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {
+                contentDescription =
+                    contentDescriptionForCenterElement
+            },
         horizontalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
-                .width(69.dp).clip(
+                .width(69.dp)
+                .clip(
                     RoundedCornerShape(
                         11.dp
                     )
@@ -70,17 +85,19 @@ fun BottomSheetCenter(theme: TimeBasedTheme, temperatureType: TemperatureType,mo
                     contentDescription = null,
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 6.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.thermometer),
-                        contentDescription = "Thermometer",
+                        contentDescription = null,
                         modifier = Modifier.padding(end = 5.dp)
                     )
                     Text(
-                        "37°",
+                        "${37.convertToFahrenheit(convertToFahrenheit)}°",
                         style = myStyle.copy(
                             fontWeight = FontWeight.Normal,
                             color = blackish,
@@ -97,7 +114,11 @@ fun BottomSheetCenter(theme: TimeBasedTheme, temperatureType: TemperatureType,mo
                     )
                 }
 
-                Column(modifier = Modifier.padding(top = 5.dp).height(26.dp).fillMaxWidth().background(color = theme.fabColor), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier
+                    .padding(top = 5.dp)
+                    .height(26.dp)
+                    .fillMaxWidth()
+                    .background(color = theme.fabColor), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         getCurrentTime(),
                         style = myStyle.copy(
