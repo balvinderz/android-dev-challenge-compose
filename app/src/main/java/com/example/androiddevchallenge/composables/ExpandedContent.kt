@@ -22,6 +22,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -56,7 +58,9 @@ fun ExpandedContent(
     ) {
         if(currentState == ExpandedSheetState.Next7Days)
         {
-            Column(modifier = Modifier.fillMaxSize().padding(top = 36.dp)){
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 36.dp)){
                 Text(stringResource(id = R.string.next_7_days),modifier = Modifier.fillMaxWidth(),style = myStyleBlackColor.copy(
                     fontSize = 19.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -114,9 +118,15 @@ fun ExpandedContent(
                 modifier = Modifier.padding(top = 10.dp)
             )
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = 27
+                            .convertToFahrenheit(convert = convertToFahrenheit)
+                            .toString() + "°" + if (convertToFahrenheit) "Fahrenheit" else "Celsius"
+                    },
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.cloudy_small),
@@ -143,7 +153,8 @@ fun ExpandedContent(
                     style = myStyleBlackColor.copy(
                         fontWeight = FontWeight.Medium,
                         fontSize = 25.sp
-                    )
+                    ),
+
                 )
             }
             Text(
@@ -175,6 +186,10 @@ fun ExpandedContent(
             LazyRow(modifier = Modifier.padding(horizontal = 15.dp, vertical = 22.dp)) {
                 items(count = 10) {
                     Column() {
+                        val temperature = (12..40).random()
+                        val temperatureType = if(convertToFahrenheit) stringResource(id = R.string.farhenheit) else stringResource(
+                            id = R.string.celsius)
+                        val contentDescription = null
                         Row(
                             modifier = Modifier.padding(end = 26.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -184,11 +199,11 @@ fun ExpandedContent(
                                 contentDescription = null
                             )
                             Text(
-                                (12..40).random().toString() + "°",
+                                "$temperature°",
                                 style = myStyleBlackColor.copy(
                                     fontWeight = FontWeight.SemiBold,
                                     fontSize = 17.sp
-                                )
+                                ),
                             )
                         }
                         Row(

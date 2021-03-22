@@ -18,6 +18,7 @@ package com.example.androiddevchallenge
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.example.androiddevchallenge.ui.theme.MyTheme
@@ -36,16 +37,16 @@ class UITests {
                 MyApp()
             }
         }
-        composeTestRule.onNodeWithContentDescription(label = "Open Bottom Sheet").assertExists()
-        composeTestRule.onNodeWithContentDescription(label = "Close Bottom Sheet")
+        composeTestRule.onNodeWithTag(testTag= "OpenBottomSheetFloatingButton").assertExists()
+        composeTestRule.onNodeWithTag(testTag = "CloseBottomSheetFloatingButton")
             .assertDoesNotExist()
-        composeTestRule.onNodeWithContentDescription(label = "Open Bottom Sheet").performClick()
-        composeTestRule.onNodeWithContentDescription(label = "Open Bottom Sheet")
+        composeTestRule.onNodeWithTag(testTag= "OpenBottomSheetFloatingButton").performClick()
+        composeTestRule.onNodeWithTag(testTag= "OpenBottomSheetFloatingButton")
             .assertDoesNotExist()
-        composeTestRule.onNodeWithContentDescription(label = "Close Bottom Sheet").assertExists()
-        composeTestRule.onNodeWithContentDescription(label = "Close Bottom Sheet").performClick()
-        composeTestRule.onNodeWithContentDescription(label = "Open Bottom Sheet").assertExists()
-        composeTestRule.onNodeWithContentDescription(label = "Close Bottom Sheet")
+        composeTestRule.onNodeWithTag(testTag = "CloseBottomSheetFloatingButton").assertExists()
+        composeTestRule.onNodeWithTag(testTag = "CloseBottomSheetFloatingButton").performClick()
+        composeTestRule.onNodeWithTag(testTag= "OpenBottomSheetFloatingButton").assertExists()
+        composeTestRule.onNodeWithTag(testTag= "CloseBottomSheetFloatingButton")
             .assertDoesNotExist()
     }
 
@@ -63,8 +64,23 @@ class UITests {
         composeTestRule.onNodeWithContentDescription(label = "Fahrenheit").performClick()
         composeTestRule.onNodeWithText("27").assertDoesNotExist()
         composeTestRule.onNodeWithText("80").assertExists()
-        composeTestRule.onNodeWithContentDescription(label = "Celcius").performClick()
+        composeTestRule.onNodeWithContentDescription(label = "Celsius").performClick()
         composeTestRule.onNodeWithText("27").assertExists()
         composeTestRule.onNodeWithText("80").assertDoesNotExist()
     }
-}
+    @ExperimentalAnimationApi
+    @Test
+    fun clickingOnNext7DaysMakesThe7DaysTabAppearTest(){
+        composeTestRule.setContent {
+            MyTheme {
+                MyApp()
+            }
+        }
+        for(i in 0..6)
+            composeTestRule.onNodeWithText(getTodaysDate(offset = i+1)).assertDoesNotExist() // initially these days should not be there
+        composeTestRule.onNodeWithContentDescription(label = "Open Bottom Sheet").performClick()
+        composeTestRule.onNodeWithTag("Next7DaysTextButton").performClick()
+        for(i in 0..6)
+            composeTestRule.onNodeWithText(getTodaysDate(offset = i+1)).assertExists() // after clicking the next7days button ,these dates should be there
+    }
+    }

@@ -28,4 +28,5 @@
     <string name="clouds">clouds</string>
     <string name="sunny_with_periodic">Sunny with periodic</string>
     <string name="today">Today</string>
+    <string name="farhenheit">farhenheit</string>
 </resources>

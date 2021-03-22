@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -55,14 +56,17 @@ fun BottomSheet(
     val windTime = remember { mutableStateOf(generateRandomTime(8,10)) }
     val sunsetTime = remember { mutableStateOf(generateRandomTime(18,20)) }
     val expandedSheetState  = remember {
-        mutableStateOf(ExpandedSheetState.Next7Days)
+        mutableStateOf(ExpandedSheetState.Today)
     }
     var height = 350
     if (expanded)
         height = 742
     var floatingButtonContentDescription = "Open Bottom Sheet"
-    if (expanded)
+    var testTag = "OpenBottomSheetFloatingButton"
+    if (expanded) {
         floatingButtonContentDescription = "Close Bottom Sheet"
+        testTag = "CloseBottomSheetFloatingButton"
+    }
     val convertToFahrenheit = temperatureType == TemperatureType.Fahrenheit
 
     Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
@@ -107,7 +111,7 @@ fun BottomSheet(
                                 expandedSheetState.value = ExpandedSheetState.Next7Days
                             else
                                 expandedSheetState.value = ExpandedSheetState.Today
-                        }
+                        }.testTag(tag = "Next7DaysTextButton")
                     )
                 }
             Column(
@@ -141,7 +145,7 @@ fun BottomSheet(
                         .size(36.dp)
                         .semantics() {
                             contentDescription = floatingButtonContentDescription
-                        }
+                        }.testTag(tag =testTag)
                 ) {
                     Icon(
                         if (expanded) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,

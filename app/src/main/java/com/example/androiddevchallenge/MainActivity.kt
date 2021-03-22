@@ -84,7 +84,7 @@ fun MyApp() {
     val theme: TimeBasedTheme = getTheme()
 
     val expanded = remember {
-        mutableStateOf(true  )
+        mutableStateOf(false   )
     }
     val temperatureType = remember {
         mutableStateOf(TemperatureType.Celsius)
@@ -154,109 +154,6 @@ fun MyApp() {
                     )
                 }
 
-            Column() {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp)
-                ) {
-                    Text(
-                        if(!expanded.value){
-                        "Today" + ", " + getTodaysDate()} else "",
-                        color = theme.textColor,
-                        style = myStyle,
-                        modifier = Modifier.padding(top = 76.dp)
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(
-                        "India",
-                        style = myStyle.copy(
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 17.sp,
-                            color = theme.textColor,
-
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                        Column() {
-                            Text(
-                                stringResource(id = R.string.day)+" " + 42.convertToFahrenheit(convertToFahrenheit) + "°",
-                                style = myStyle.copy(
-                                    fontWeight = FontWeight.Medium,
-                                    fontSize = 17.sp,
-                                    color = theme.textColor,
-
-                                )
-                            )
-                            Text(
-                                stringResource(id = R.string.night)+" " + 28.convertToFahrenheit(convertToFahrenheit) + "°",
-                                style = myStyle.copy(
-                                    fontWeight = FontWeight.Medium,
-                                    fontSize = 17.sp,
-                                    color = theme.textColor,
-
-                                )
-                            )
-                        }
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.End
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painter = painterResource(id = getIcon(theme),),
-                                    contentDescription = null
-                                )
-                                Spacer(modifier = Modifier.width(10.3.dp))
-                                Text(
-                                    "${27.convertToFahrenheit(convertToFahrenheit)}",
-                                    style = myStyle.copy(
-                                        fontSize = 59.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = theme.textColor,
-
-                                    )
-                                )
-                                Text(
-                                    "°",
-                                    style = myStyle.copy(
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 29.sp,
-                                        color = theme.textColor,
-
-                                    )
-                                )
-                                Text(
-                                    if (temperatureType.value == TemperatureType.Celsius)"C" else "F",
-                                    style = myStyle.copy(
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 36.sp,
-                                        color = theme.textColor,
-
-                                    )
-                                )
-                            }
-                            Text(
-                                stringResource(id = R.string.sunny_with_periodic)+" \n" + stringResource(
-                                    id = R.string.clouds
-                                ),
-                                style = myStyle.copy(
-                                    fontWeight = FontWeight.Medium,
-                                    fontSize = 15.sp,
-                                    color = theme.textColor,
-
-                                ),
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                    }
-                }
-            }
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
                 Image(
                     painter = painterResource(id = theme.backgroundImage),
@@ -296,6 +193,111 @@ fun MyApp() {
 
                 }
             }
+            if(!expanded.value)
+            Column() {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                ) {
+                    Text(
+                        if(!expanded.value){
+                            "Today" + ", " + getTodaysDate()} else "",
+                        color = theme.textColor,
+                        style = myStyle,
+                        modifier = Modifier.padding(top = 76.dp)
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        "India",
+                        style = myStyle.copy(
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 17.sp,
+                            color = theme.textColor,
+
+                            )
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                        Column() {
+                            Text(
+                                stringResource(id = R.string.day)+" " + 42.convertToFahrenheit(convertToFahrenheit) + "°",
+                                style = myStyle.copy(
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 17.sp,
+                                    color = theme.textColor,
+
+                                    )
+                            )
+                            Text(
+                                stringResource(id = R.string.night)+" " + 28.convertToFahrenheit(convertToFahrenheit) + "°",
+                                style = myStyle.copy(
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 17.sp,
+                                    color = theme.textColor,
+
+                                    )
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painterResource(id = getIcon(theme),),
+                                    contentDescription = null
+                                )
+                                Spacer(modifier = Modifier.width(10.3.dp))
+                                Text(
+                                    "${27.convertToFahrenheit(convertToFahrenheit)}",
+                                    style = myStyle.copy(
+                                        fontSize = 59.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = theme.textColor,
+
+                                        )
+                                )
+                                Text(
+                                    "°",
+                                    style = myStyle.copy(
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 29.sp,
+                                        color = theme.textColor,
+
+                                        )
+                                )
+                                Text(
+                                    if (temperatureType.value == TemperatureType.Celsius)"C" else "F",
+                                    style = myStyle.copy(
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 36.sp,
+                                        color = theme.textColor,
+
+                                        )
+                                )
+                            }
+                            Text(
+                                stringResource(id = R.string.sunny_with_periodic)+" \n" + stringResource(
+                                    id = R.string.clouds
+                                ),
+                                style = myStyle.copy(
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 15.sp,
+                                    color = theme.textColor,
+
+                                    ),
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                }
+            }
+
         }
     }
 }
